@@ -10,3 +10,7 @@ test("run with needless spaces expr", () => {
   expect(result).toBe(3);
 });
 
+test("nested", () => {
+  const result = run("(+ 1 (* 3 2) (+ 3 4))");
+  expect(result).toBe(14);
+});
