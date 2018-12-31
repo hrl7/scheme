@@ -5,9 +5,9 @@ const functions = {
 
 const run = srcStr => {
   const src = srcStr.replace(/\s+/g, " ").replace(/\)/g, ") ");
-  if(src === "") {
+  if (src === "") {
     return "";
-  };
+  }
   return src
     .split(" ")
     .map(t => (isNaN(Number(t)) ? t : Number(t)))
@@ -16,7 +16,7 @@ const run = srcStr => {
         if (t[0] === "(") {
           ctx.depth++;
           if (ctx.op != null) {
-            ctx.env.push({op: ctx.op, args: ctx.args});
+            ctx.env.push({ op: ctx.op, args: ctx.args });
             ctx.op = null;
             ctx.args = [];
           }
@@ -26,25 +26,22 @@ const run = srcStr => {
           if (ctx.op == null) {
             throw new Error(`invalid function ${t.slice(1)}`);
           }
-
         } else if (t[t.length - 1] === ")") {
-          
           ctx.depth--;
           ctx.args.push(Number(t.slice(0, t.length - 1)));
           ctx.args = [ctx.op(ctx.args)];
           ctx.op = null;
 
-          if(ctx.env.length !== 0) {
+          if (ctx.env.length !== 0) {
             const env = ctx.env.pop();
-            const result = ctx.args
+            const result = ctx.args;
             ctx.args = env.args.concat(result);
             ctx.op = env.op;
           }
-          
-          if(ctx.depth === 0 && ctx.op != null) {
-            ctx.args = ctx.op(ctx.args); 
-          }
 
+          if (ctx.depth === 0 && ctx.op != null) {
+            ctx.args = ctx.op(ctx.args);
+          }
         } else {
           ctx.args.push(t);
         }
