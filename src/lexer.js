@@ -10,6 +10,7 @@ const KEYWORDS = {
   IF: "if",
   SET_BANG: "set!",
   ELSE: "else",
+  LAMBDA: "lambda",
 };
 const SYMBOLS_KEYS = Object.keys(SYMBOLS);
 
@@ -36,6 +37,7 @@ class Lexer {
       "#t": () => this.makeBoolean(true),
       "#f": () => this.makeBoolean(false),
       if: () => this.makeKeyword(KEYWORDS.IF),
+      lambda: () => this.makeKeyword(KEYWORDS.LAMBDA),
     };
   }
 
