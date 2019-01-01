@@ -1,4 +1,7 @@
 const debug = require("debug")("parser");
+const debugQuote = require("debug")("parser:quote");
+const debugProc = require("debug")("parser:proc");
+const debugExpr = require("debug")("parser:proc");
 const { TOKEN_TYPES } = require("./constants");
 
 const toNode = token => {
@@ -62,9 +65,9 @@ class Parser {
       }
       this.currentIndex++;
       token = this.tokens[this.currentIndex];
-      debug("next: ", token);
+      debugProc("next: ", token);
     }
-    debug("finish to parse proc call: ", expr);
+    debugProc("finish to parse proc call: ", expr);
     return expr;
   }
 
@@ -134,7 +137,7 @@ class Parser {
 
   makeExpr() {
     const token = this.tokens[this.currentIndex];
-    debug("make expr: ", token.type);
+    debugExpr("make expr: ", token.type);
     if (token.type === TOKEN_TYPES.LPAREN) {
       this.currentIndex++;
       return {
@@ -153,9 +156,9 @@ class Parser {
   makeQuotedExpr() {
     this.currentIndex++;
     let token = this.tokens[this.currentIndex];
-    debug("quote expr: ", this.tokens[this.currentIndex + 1]);
+    debugQuote("quote expr: ", this.tokens[this.currentIndex + 1]);
     if (token.type !== TOKEN_TYPES.LPAREN) {
-      debug("atom found : ", token);
+      debugQuote("atom found : ", token);
       return {
         type: "QUOTED_EXPR",
         expr: toNode(token),
@@ -169,13 +172,25 @@ class Parser {
     let stack = [];
     this.currentIndex++;
     token = this.tokens[this.currentIndex];
-    debug("before loop: ", this.currentIndex, this.tokens[this.currentIndex]);
+    debugQuote(
+      "before loop: ",
+      this.currentIndex,
+      this.tokens[this.currentIndex].name
+    );
     while (
       token.type !== TOKEN_TYPES.RPAREN &&
       depth > 0 &&
       this.currentIndex < this.tokens.length
     ) {
-      debug("depth: ", depth, "currentNode: ", currentNode, "token: ", token);
+      debugQuote(
+        "depth: ",
+        depth,
+        "currentNode: ",
+        currentNode,
+        "token: ",
+        token.type,
+        token.name
+      );
       switch (token.type) {
         case TOKEN_TYPES.LPAREN: {
           depth++;
@@ -194,13 +209,18 @@ class Parser {
           break;
         }
         default:
-          debug("push: ", token);
+          debugQuote("push: ", token);
           currentNode.contents.push(toNode(token));
       }
       this.currentIndex++;
       token = this.tokens[this.currentIndex];
     }
-    debug(currentNode);
+    debugQuote(currentNode);
+    if (currentNode.type === "LIST" && currentNode.contents === []) {
+      return {
+        type: "NULL",
+      };
+    }
     return {
       type: "QUOTED_EXPR",
       expr: currentNode,

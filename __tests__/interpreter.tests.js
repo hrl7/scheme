@@ -13,28 +13,28 @@ test("eval quoted list", () => {
   const interpreter = new Interpreter();
   interpreter.run("(quote (a b c d))");
   expect(interpreter.result).toEqual({
-    type: "CONS_CELL",
+    type: "PAIR",
     car: {
       type: "ATOM",
-      value: "a",
+      name: "a",
     },
     cdr: {
-      type: "CONS_CELL",
+      type: "PAIR",
       car: {
         type: "ATOM",
-        value: "b",
+        name: "b",
       },
       cdr: {
-        type: "CONS_CELL",
+        type: "PAIR",
         car: {
           type: "ATOM",
-          value: "c",
+          name: "c",
         },
         cdr: {
-          type: "CONS_CELL",
+          type: "PAIR",
           car: {
             type: "ATOM",
-            value: "d",
+            name: "d",
           },
           cdr: {
             type: "NULL",
@@ -50,7 +50,7 @@ test("eval car ", () => {
   interpreter.run("(car '(a b c d))");
   expect(interpreter.result).toEqual({
     type: "ATOM",
-    value: "a",
+    name: "a",
   });
 });
 
@@ -58,22 +58,22 @@ test("eval cdr", () => {
   const interpreter = new Interpreter();
   interpreter.run("(cdr '(a b c d))");
   expect(interpreter.result).toEqual({
-    type: "CONS_CELL",
+    type: "PAIR",
     car: {
       type: "ATOM",
-      value: "b",
+      name: "b",
     },
     cdr: {
-      type: "CONS_CELL",
+      type: "PAIR",
       car: {
         type: "ATOM",
-        value: "c",
+        name: "c",
       },
       cdr: {
-        type: "CONS_CELL",
+        type: "PAIR",
         car: {
           type: "ATOM",
-          value: "d",
+          name: "d",
         },
         cdr: {
           type: "NULL",
@@ -85,18 +85,32 @@ test("eval cdr", () => {
 
 test("eval null? => #t", () => {
   const interpreter = new Interpreter();
-  interpreter.run("(null? '()");
+  interpreter.run("(null? '())");
   expect(interpreter.result).toEqual({
     type: "BOOLEAN",
-    value: "true",
+    value: true,
+    symbol: "#t",
   });
 });
 
 test("eval null? => #f", () => {
   const interpreter = new Interpreter();
-  interpreter.run("(null? '(a)");
+  interpreter.run("(null? '(a))");
   expect(interpreter.result).toEqual({
     type: "BOOLEAN",
-    value: "false",
+    value: false,
+    symbol: "#f",
   });
+});
+
+test("eval empty list", () => {
+  const interpreter = new Interpreter();
+  const result = interpreter.eval({
+    type: "QUOTED_EXPR",
+    expr: {
+      type: "LIST",
+      contents: [],
+    },
+  });
+  expect(result).toEqual({ type: "NULL" });
 });

@@ -156,3 +156,28 @@ test("parse expr includes quote", () => {
     },
   ]);
 });
+
+test("parse empty list", () => {
+  const lexer = new Lexer("'()");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  expect(parser.program).toEqual([
+    {
+      type: "QUOTED_EXPR",
+      expr: {
+        type: "LIST",
+        contents: [],
+      },
+    },
+  ]);
+});
+
+test("parse quoted list", () => {
+  const lexer = new Lexer("(car '(a b c d))");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  expect(parser.program[0].expr.type).toBe("PROC_CALL");
+  expect(parser.program[0].expr.operands[0].expr.contents[0].name).toBe("a");
+});

@@ -113,3 +113,12 @@ test("parse quoted", () => {
   lexer.tokenize();
   expect(lexer.tokens[2].type).toBe("QUOTE");
 });
+
+test("parse empty list", () => {
+  const src = "'()";
+  const lexer = new Lexer(src);
+  lexer.tokenize();
+  expect(lexer.tokens[0].type).toBe("QUOTE");
+  expect(lexer.tokens[1].type).toBe("LPAREN");
+  expect(lexer.tokens[2].type).toBe("RPAREN");
+});
