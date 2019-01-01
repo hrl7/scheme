@@ -27,18 +27,7 @@ class Parser {
   }
 
   parse() {
-    const token = this.tokens[this.currentIndex];
-    const node = {
-      type: "EXPR",
-      expr: null,
-    };
-    switch (token.type) {
-      case TOKEN_TYPES.LPAREN: {
-        this.currentIndex++;
-        node.expr = this.makeProcCall();
-        break;
-      }
-    }
+    const node = this.makeExpr();
     this.program.push(node);
   }
 
@@ -55,31 +44,21 @@ class Parser {
       this.currentIndex < this.tokens.length
     ) {
       switch (token.type) {
-        case TOKEN_TYPES.LPAREN:
-          if (expr.operator == null) {
-            expr.operator = this.makeExpr();
-          } else {
-            expr.operands.push(this.makeExpr());
-          }
-          break;
         case TOKEN_TYPES.RPAREN:
-          break;
-        case TOKEN_TYPES.IDENTIFIER:
-        case TOKEN_TYPES.NUMBER:
-          if (expr.operator == null) {
-            expr.operator = toNode(token);
-          } else {
-            expr.operands.push(toNode(token));
-          }
           break;
         case TOKEN_TYPES.KEYWORD: {
           if (token.keyword === "lambda") {
             this.currentIndex++;
             return this.makeLambda();
           }
+          break;
         }
-
         default:
+          if (expr.operator == null) {
+            expr.operator = this.makeExpr();
+          } else {
+            expr.operands.push(this.makeExpr());
+          }
       }
       this.currentIndex++;
       token = this.tokens[this.currentIndex];
@@ -154,15 +133,78 @@ class Parser {
   }
 
   makeExpr() {
-    const node = {
-      type: "EXPR",
-      expr: {},
-    };
-    let token = this.tokens[this.currentIndex];
-    this.assertLPAREN(token, "EXPR");
+    const token = this.tokens[this.currentIndex];
+    debug("make expr: ", token.type);
+    if (token.type === TOKEN_TYPES.LPAREN) {
+      this.currentIndex++;
+      return {
+        type: "EXPR",
+        expr: this.makeProcCall(),
+      };
+    }
+
+    if (token.type === TOKEN_TYPES.QUOTE) {
+      return this.makeQuotedExpr();
+    }
+
+    return toNode(token);
+  }
+
+  makeQuotedExpr() {
     this.currentIndex++;
-    node.expr = this.makeProcCall();
-    return node;
+    let token = this.tokens[this.currentIndex];
+    debug("quote expr: ", this.tokens[this.currentIndex + 1]);
+    if (token.type !== TOKEN_TYPES.LPAREN) {
+      debug("atom found : ", token);
+      return {
+        type: "QUOTED_EXPR",
+        expr: toNode(token),
+      };
+    }
+    let depth = 1;
+    let currentNode = {
+      type: "LIST",
+      contents: [],
+    };
+    let stack = [];
+    this.currentIndex++;
+    token = this.tokens[this.currentIndex];
+    debug("before loop: ", this.currentIndex, this.tokens[this.currentIndex]);
+    while (
+      token.type !== TOKEN_TYPES.RPAREN &&
+      depth > 0 &&
+      this.currentIndex < this.tokens.length
+    ) {
+      debug("depth: ", depth, "currentNode: ", currentNode, "token: ", token);
+      switch (token.type) {
+        case TOKEN_TYPES.LPAREN: {
+          depth++;
+          stack.push(currentNode);
+          currentNode = {
+            type: "LIST",
+            contents: [],
+          };
+          break;
+        }
+        case TOKEN_TYPES.RPAREN: {
+          depth--;
+          let n = currentNode;
+          currentNode = stack.pop();
+          currentNode.contents.push(n);
+          break;
+        }
+        default:
+          debug("push: ", token);
+          currentNode.contents.push(toNode(token));
+      }
+      this.currentIndex++;
+      token = this.tokens[this.currentIndex];
+    }
+    debug(currentNode);
+    return {
+      type: "QUOTED_EXPR",
+      expr: currentNode,
+    };
   }
 }
 

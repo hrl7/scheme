@@ -5,6 +5,7 @@ const TOKEN_TYPES = {
   NUMBER: "NUMBER",
   RPAREN: "RPAREN",
   LPAREN: "LPAREN",
+  QUOTE: "QUOTE",
 };
 
 module.exports = {

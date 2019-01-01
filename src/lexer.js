@@ -4,6 +4,7 @@ const debug = require("debug")("lexer");
 const SYMBOLS = {
   LPAREN: "(",
   RPAREN: ")",
+  QUOTE: "'",
 };
 
 const KEYWORDS = {

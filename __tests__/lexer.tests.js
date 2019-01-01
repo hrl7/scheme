@@ -106,3 +106,10 @@ test("parse true false ", () => {
   expect(lexer.tokens[2].type).toBe("BOOLEAN");
   expect(lexer.tokens[2].value).toBe(false);
 });
+
+test("parse quoted", () => {
+  const src = "(car '(a b c))";
+  const lexer = new Lexer(src);
+  lexer.tokenize();
+  expect(lexer.tokens[2].type).toBe("QUOTE");
+});

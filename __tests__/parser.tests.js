@@ -133,20 +133,23 @@ test("parse expr includes quote", () => {
         operands: [
           {
             type: "QUOTED_EXPR",
-            expr: [
-              {
-                type: "IDENTIFIER",
-                name: "a",
-              },
-              {
-                type: "IDENTIFIER",
-                name: "b",
-              },
-              {
-                type: "IDENTIFIER",
-                name: "c",
-              },
-            ],
+            expr: {
+              type: "LIST",
+              contents: [
+                {
+                  type: "IDENTIFIER",
+                  name: "a",
+                },
+                {
+                  type: "IDENTIFIER",
+                  name: "b",
+                },
+                {
+                  type: "IDENTIFIER",
+                  name: "c",
+                },
+              ],
+            },
           },
         ],
       },
