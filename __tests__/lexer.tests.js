@@ -1,4 +1,4 @@
-const { Lexer } = require("../src/lexer");
+const Lexer = require("../src/lexer");
 
 test("parse simple expression", () => {
   const src = "(+ 1 2 345)";

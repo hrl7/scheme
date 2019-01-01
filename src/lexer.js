@@ -162,6 +162,4 @@ class Lexer {
   }
 }
 
-module.exports = {
-  Lexer: Lexer,
-};
+module.exports = Lexer;
