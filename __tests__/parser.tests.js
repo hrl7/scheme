@@ -115,3 +115,41 @@ test("parse nested expression", () => {
     },
   ]);
 });
+
+test("parse expr includes quote", () => {
+  const lexer = new Lexer("(car '(a b c))");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  expect(parser.program).toEqual([
+    {
+      type: "EXPR",
+      expr: {
+        type: "PROC_CALL",
+        operator: {
+          type: "IDENTIFIER",
+          name: "car",
+        },
+        operands: [
+          {
+            type: "QUOTED_EXPR",
+            expr: [
+              {
+                type: "IDENTIFIER",
+                name: "a",
+              },
+              {
+                type: "IDENTIFIER",
+                name: "b",
+              },
+              {
+                type: "IDENTIFIER",
+                name: "c",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ]);
+});
