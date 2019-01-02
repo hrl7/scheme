@@ -19,6 +19,9 @@ const NODE_TYPES = {
   QUOTED_EXPR: "QUOTED_EXPR",
   LIST: "LIST",
   ATOM: "ATOM",
+  NULL: "NULL",
+  PAIR: "PAIR",
+  ERROR: "ERROR",
 };
 module.exports = {
   TOKEN_TYPES: TOKEN_TYPES,

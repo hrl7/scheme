@@ -1,16 +1,16 @@
 const { NODE_TYPES } = require("./constants");
 
 const NULL = {
-  type: "NULL",
+  type: NODE_TYPES.NULL,
 };
 
 const TRUE = {
-  type: "BOOLEAN",
+  type: NODE_TYPES.BOOLEAN,
   value: true,
   symbol: "#t",
 };
 const FALSE = {
-  type: "BOOLEAN",
+  type: NODE_TYPES.BOOLEAN,
   value: false,
   symbol: "#f",
 };
@@ -25,13 +25,13 @@ const toString = node => {
   if (node.name != null) {
     return node.name;
   }
-  if (node.type === "NUMBER") {
+  if (node.type === NODE_TYPES.NUMBER) {
     return node.value.toString();
   }
-  if (node.type === "NULL") {
+  if (node.type === NODE_TYPES.NULL) {
     return "null";
   }
-  if (node.type === "ERROR") {
+  if (node.type === NODE_TYPES.ERROR) {
     return `ERROR: ${node.message}`;
   }
   return JSON.stringify(node, null, 2);
@@ -43,7 +43,7 @@ const buildPair = (car, cdr) => {
     throw new Error(msg);
   }
   return {
-    type: "PAIR",
+    type: NODE_TYPES.PAIR,
     car: car,
     cdr: cdr || NULL,
   };
@@ -51,7 +51,7 @@ const buildPair = (car, cdr) => {
 
 const buildProc = (name, assertion, body) => {
   return {
-    type: "PROC",
+    type: NODE_TYPES.PROC,
     name,
     assertion,
     body,
@@ -64,7 +64,7 @@ const buildNumber = num => {
     throw new Error(`failed to parse as number: ${num}`);
   }
   return {
-    type: "NUMBER",
+    type: NODE_TYPES.NUMBER,
     value: num,
   };
 };
