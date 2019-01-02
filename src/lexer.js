@@ -42,6 +42,13 @@ class Lexer {
     };
   }
 
+  reset() {
+    this.src = "";
+    this.tokens = [];
+    this.currentIndex = 0;
+    this.buf = "";
+  }
+
   tokenize() {
     const i = this.currentIndex;
     let length = this.src.length;

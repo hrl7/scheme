@@ -29,6 +29,12 @@ class Parser {
     this.currentIndex = 0;
   }
 
+  reset() {
+    this.currentIndex = 0;
+    this.program = [];
+    this.tokens = [];
+  }
+
   parse() {
     const node = this.makeExpr();
     this.program.push(node);

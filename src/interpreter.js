@@ -77,14 +77,14 @@ class Interpreter {
   }
 
   run(src) {
+    this.lexer.reset();
+    this.parser.reset();
     debug("run: ", src);
     this.lexer.src = src;
     this.lexer.tokenize();
     this.parser.tokens = this.lexer.tokens;
     this.parser.parse();
     this.program = this.parser.program;
-    this.lexer.tokens = null;
-    this.parser.program = null;
 
     let pc = 0;
     while (pc < this.program.length) {
@@ -120,6 +120,8 @@ class Interpreter {
       case NODE_TYPES.NUMBER:
       case NODE_TYPES.PROC:
         return expr;
+      case NODE_TYPES.EXPR:
+        return this.evalExpr(expr.expr);
       case NODE_TYPES.QUOTED_EXPR:
         return this.evalQuote(expr);
       default:
@@ -227,6 +229,7 @@ class Interpreter {
 
     debug("eval operands");
     const operands = ast.operands.map(this.evalExpr.bind(this));
+    debug("evaluated operands: ", operands);
     const err = proc.assertion(operands);
     if (err != null) {
       return err;

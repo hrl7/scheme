@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="519f1f2d-e871-4f39-9ae8-b48e37285d9d" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/functions/base.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/nodes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/repl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/interpreter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/interpreter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lexer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/lexer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/nodes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/nodes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/parser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/procedures/base.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/procedures/base.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,15 +25,6 @@
     <splitter split-orientation="horizontal" split-proportion="0.6082328">
       <split-first>
         <leaf>
-          <file leaf-file-name="lexer.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/lexer.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="745">
-                  <caret line="164" selection-start-line="164" selection-end-line="164" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="constants.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/constants.js">
               <provider selected="true" editor-type-id="text-editor">
@@ -38,61 +34,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="lexer.tests.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/__tests__/lexer.tests.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="758">
-                  <caret line="122" column="22" selection-start-line="122" selection-start-column="22" selection-end-line="122" selection-end-column="22" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="parser.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/parser.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-533">
-                  <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/index.js">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file leaf-file-name="interpreter.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/interpreter.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-3059">
-                  <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="base.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/functions/base.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="102">
-                  <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="interpreter.tests.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/__tests__/interpreter.tests.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1649">
-                  <caret line="97" column="30" selection-start-line="97" selection-start-column="30" selection-end-line="97" selection-end-column="30" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="parser.tests.js" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/__tests__/parser.tests.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="741">
-                  <caret line="181" column="64" selection-start-line="181" selection-start-column="64" selection-end-line="181" selection-end-column="64" />
+                <state relative-caret-position="517">
+                  <caret line="34" column="20" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
                 </state>
               </provider>
             </entry>
@@ -100,6 +46,61 @@
           <file leaf-file-name="calc.tests.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/__tests__/calc.tests.js">
               <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file leaf-file-name="repl.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/repl.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="17">
+                  <caret line="1" column="15" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/index.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="306">
+                  <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="interpreter.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/interpreter.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="509">
+                  <caret line="123" column="37" selection-start-line="123" selection-start-column="37" selection-end-line="123" selection-end-column="37" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.gitignore">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file leaf-file-name="lexer.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/lexer.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="399">
+                  <caret line="46" column="20" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="base.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/procedures/base.js">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file leaf-file-name="math.js" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/procedures/math.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="170">
+                  <caret line="10" column="30" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+                </state>
+              </provider>
             </entry>
           </file>
         </leaf>
@@ -118,8 +119,8 @@
           <file leaf-file-name="nodes.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/nodes.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="758">
-                  <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+                <state relative-caret-position="605">
+                  <caret line="69" column="19" selection-start-line="69" selection-start-column="19" selection-end-line="69" selection-end-column="19" />
                 </state>
               </provider>
             </entry>
@@ -130,9 +131,10 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>keyword</find>
       <find>next</find>
       <find>evalExpr</find>
+      <find>keyword</find>
+      <find>makePair</find>
       <find>makeQuotedExpr</find>
     </findStrings>
   </component>
@@ -142,16 +144,19 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/repl.js" />
-        <option value="$PROJECT_DIR$/src/lexer.js" />
         <option value="$PROJECT_DIR$/__tests__/lexer.tests.js" />
-        <option value="$PROJECT_DIR$/src/parser.js" />
         <option value="$PROJECT_DIR$/__tests__/parser.tests.js" />
         <option value="$PROJECT_DIR$/src/constants.js" />
         <option value="$PROJECT_DIR$/__tests__/interpreter.tests.js" />
         <option value="$PROJECT_DIR$/src/functions/base.js" />
-        <option value="$PROJECT_DIR$/src/nodes.js" />
+        <option value="$PROJECT_DIR$/src/procedures/base.js" />
+        <option value="$PROJECT_DIR$/src/procedures/math.js" />
+        <option value="$PROJECT_DIR$/src/parser.js" />
+        <option value="$PROJECT_DIR$/src/lexer.js" />
+        <option value="$PROJECT_DIR$/index.js" />
         <option value="$PROJECT_DIR$/src/interpreter.js" />
+        <option value="$PROJECT_DIR$/src/nodes.js" />
+        <option value="$PROJECT_DIR$/src/repl.js" />
       </list>
     </option>
   </component>
@@ -197,7 +202,7 @@
               <item name="SchemeInterpreter" type="b2602c69:ProjectViewProjectNode" />
               <item name="SchemeInterpreter" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="functions" type="462c0819:PsiDirectoryNode" />
+              <item name="procedures" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -238,12 +243,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1546156417804</updated>
-      <workItem from="1546156419543" duration="41723000" />
+      <workItem from="1546156419543" duration="48216000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41723000" />
+    <option name="totallyTimeSpent" value="48216000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
@@ -285,22 +290,6 @@
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/__tests__/calc.tests.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lexer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="745">
-          <caret line="164" selection-start-line="164" selection-end-line="164" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/__tests__/lexer.tests.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="758">
@@ -329,31 +318,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/functions/base.js">
+    <entry file="file://$PROJECT_DIR$/src/procedures/math.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
+        <state relative-caret-position="170">
+          <caret line="10" column="30" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/parser.js">
+    <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-533">
-          <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
+        <state relative-caret-position="323">
+          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/nodes.js">
+    <entry file="file://$PROJECT_DIR$/src/lexer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="758">
-          <caret line="64" column="1" selection-start-line="64" selection-start-column="1" selection-end-line="64" selection-end-column="1" />
+        <state relative-caret-position="399">
+          <caret line="46" column="20" selection-start-line="46" selection-start-column="20" selection-end-line="46" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/procedures/base.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/interpreter.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3059">
-          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
+        <state relative-caret-position="509">
+          <caret line="123" column="37" selection-start-line="123" selection-start-column="37" selection-end-line="123" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/__tests__/calc.tests.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/parser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="517">
+          <caret line="34" column="20" selection-start-line="34" selection-start-column="20" selection-end-line="34" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/nodes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="605">
+          <caret line="69" column="19" selection-start-line="69" selection-start-column="19" selection-end-line="69" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/repl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="15" selection-start-line="1" selection-start-column="15" selection-end-line="1" selection-end-column="15" />
         </state>
       </provider>
     </entry>

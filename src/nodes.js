@@ -1,3 +1,5 @@
+const { NODE_TYPES } = require("./constants");
+
 const NULL = {
   type: "NULL",
 };
@@ -67,6 +69,34 @@ const buildNumber = num => {
   };
 };
 
+const display = node => {
+  if (node == null) {
+    return "";
+  }
+
+  switch (node.type) {
+    case NODE_TYPES.NUMBER:
+      return String(node.value);
+    case NODE_TYPES.IDENTIFIER:
+    case NODE_TYPES.ATOM:
+      return node.name;
+    case NODE_TYPES.BOOLEAN:
+      return node.value ? "#t" : "#f";
+    case NODE_TYPES.LIST:
+      return (
+        "( " +
+        node.contents.reduce((acc, n) => `${acc} ${display(n)}`, "") +
+        " )"
+      );
+    case NODE_TYPES.EXPR:
+    case NODE_TYPES.QUOTED_EXPR:
+      return display(node.expr);
+
+    default:
+      return JSON.stringify(node);
+  }
+};
+
 module.exports = {
   buildPair: buildPair,
   buildProc: buildProc,
@@ -75,4 +105,5 @@ module.exports = {
   FALSE: FALSE,
   NULL: NULL,
   toString: toString,
+  display: display,
 };
