@@ -3,7 +3,16 @@ const debugAssert = require("debug")("eval:assert");
 const Lexer = require("./lexer");
 const Parser = require("./parser");
 const { NODE_TYPES } = require("./constants");
-
+const {
+  TRUE,
+  FALSE,
+  NULL,
+  buildProc,
+  buildPair,
+  toString,
+} = require("./nodes");
+const { BASE_PROCEDURES } = require("./procedures/base");
+const { MATH_PROCEDURES } = require("./procedures/math");
 class Env {
   constructor(table) {
     this.table = table || {};
@@ -17,89 +26,33 @@ class ArgumentsError {
   }
 }
 
-const buildProc = (name, assertion, body) => {
-  return {
-    type: "PROC",
-    name,
-    assertion,
-    body,
-  };
-};
-
-const NULL = {
-  type: "NULL",
-};
-
-const TRUE = {
-  type: "BOOLEAN",
-  value: true,
-  symbol: "#t",
-};
-const FALSE = {
-  type: "BOOLEAN",
-  value: false,
-  symbol: "#f",
-};
-
-const toString = node => {
-  if (node == null) {
-    throw new Error("undefined node found");
-  }
-  if (node.symbol != null) {
-    return node.symbol;
-  }
-  if (node.name != null) {
-    return node.name;
-  }
-  if (node.type === "NUMBER") {
-    return node.value.toString();
-  }
-  if (node.type === "NULL") {
-    return "null";
-  }
-  if (node.type === "ERROR") {
-    return `ERROR: ${node.message}`;
-  }
-  return JSON.stringify(node, null, 2);
-};
-
-const makePair = (car, cdr) => {
-  if (car == null || cdr == null) {
-    const msg = `cannot make pair. car: ${car}, cdr: ${cdr}`;
-    throw new Error(msg);
-  }
-  return {
-    type: "PAIR",
-    car: car,
-    cdr: cdr || NULL,
-  };
-};
-
 class Interpreter {
   constructor() {
     this.lexer = new Lexer();
     this.parser = new Parser();
     this.result = null;
     this.program = null;
-    this.globalEnv = new Env({
-      cons: this.makeProc(["*", "*"], "cons", operands =>
-        makePair(operands[0], operands[1])
-      ),
-      car: this.makeProc(["PAIR"], "car", operands => operands[0].car),
-      cdr: this.makeProc(["PAIR"], "cdr", operands => operands[0].cdr),
-      "null?": this.makeProc(["*"], "null?", operands =>
-        operands[0].type === "NULL" ? TRUE : FALSE
-      ),
-      "eq?": this.makeProc(["*", "*"], "eq?", operands =>
-        operands[0].symbol === operands[1].symbol ? TRUE : FALSE
-      ),
-    });
+    let procs = {};
+    procs = BASE_PROCEDURES.reduce(
+      (acc, proc) =>
+        Object.assign(acc, { [proc[1]]: this.makeProc.apply(this, proc) }),
+      procs
+    );
+    procs = MATH_PROCEDURES.reduce(
+      (acc, proc) =>
+        Object.assign(acc, { [proc[1]]: this.makeProc.apply(this, proc) }),
+      procs
+    );
+    this.globalEnv = new Env(procs);
     this.stack = [];
   }
 
   makeProc(argumentsSpec, name, body) {
-    let assertion;
-    assertion = operands => {
+    if (argumentsSpec === "REST") {
+      return buildProc(name, () => null, body);
+    }
+
+    const assertion = operands => {
       debugAssert(argumentsSpec, operands);
       if (argumentsSpec.length !== operands.length) {
         return new ArgumentsError(
@@ -164,6 +117,7 @@ class Interpreter {
         return this.evalProcCall(expr);
       case NODE_TYPES.IDENTIFIER:
         return this.evalIdentifier(expr);
+      case NODE_TYPES.NUMBER:
       case NODE_TYPES.PROC:
         return expr;
       case NODE_TYPES.QUOTED_EXPR:
@@ -215,7 +169,7 @@ class Interpreter {
       let i = length - 1;
       let list = NULL;
       while (i >= 0) {
-        list = makePair(this.evalQuote(contents[i]), list);
+        list = buildPair(this.evalQuote(contents[i]), list);
         i--;
       }
 
@@ -258,20 +212,26 @@ class Interpreter {
       }
       return this.evalQuote(ast.operands[0]);
     }
+
     debug("eval proc");
     const proc = this.evalExpr(ast.operator);
-    if (proc.type !== "PROC") {
+    if (proc.type === "ERROR") {
+      return proc;
+    }
+    if (proc.type !== NODE_TYPES.PROC) {
       return {
         type: "ERROR",
-        message: `invalid application for ${proc}`,
+        message: `invalid application for ${toString(proc)}`,
       };
     }
+
     debug("eval operands");
     const operands = ast.operands.map(this.evalExpr.bind(this));
     const err = proc.assertion(operands);
     if (err != null) {
       return err;
     }
+
     debug("apply: ", proc.name, "arguments: ", operands.map(toString));
     return proc.body(operands);
   }
