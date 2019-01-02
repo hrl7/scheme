@@ -91,7 +91,18 @@ const display = node => {
     case NODE_TYPES.EXPR:
     case NODE_TYPES.QUOTED_EXPR:
       return display(node.expr);
-
+    case NODE_TYPES.PAIR: {
+      let n = node.cdr;
+      let str = "(" + display(node.car);
+      while (n != null && n.type !== NODE_TYPES.NULL) {
+        if (n.type === NODE_TYPES.PAIR) {
+          str += " " + display(n.car);
+          n = n.cdr;
+        }
+      }
+      str += ")";
+      return str;
+    }
     default:
       return JSON.stringify(node);
   }
