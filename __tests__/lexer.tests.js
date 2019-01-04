@@ -122,3 +122,12 @@ test("tokenize empty list", () => {
   expect(lexer.tokens[1].type).toBe("LPAREN");
   expect(lexer.tokens[2].type).toBe("RPAREN");
 });
+
+test("tokenize cons", () => {
+  const src = "(cons 'a '(b))";
+  const lexer = new Lexer(src);
+  lexer.tokenize();
+  expect(lexer.tokens[1].type).toBe("IDENTIFIER");
+  expect(lexer.tokens[1].identifier).toBe("cons");
+  expect(lexer.tokens[2].type).toBe("QUOTE");
+});
