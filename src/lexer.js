@@ -17,7 +17,7 @@ const KEYWORDS = {
 const SYMBOLS_KEYS = Object.keys(SYMBOLS);
 
 const isSpace = c => {
-  return c === " " || c === "s" || c === "\t" || c === "\n" || c === "\r";
+  return c === " " || c === "\t" || c === "\n" || c === "\r";
 };
 const findSymbol = c => {
   for (let k = 0; k < SYMBOLS_KEYS.length; k++) {
