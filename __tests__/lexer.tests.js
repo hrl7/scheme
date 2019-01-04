@@ -1,6 +1,6 @@
 import Lexer from "../src/lexer";
 
-test("parse simple expression", () => {
+test("tokenize simple expression", () => {
   const src = "(+ 1 2 345)";
   const lexer = new Lexer(src);
   lexer.tokenize();
@@ -90,14 +90,14 @@ test("parse simple expression", () => {
   ]);
 });
 
-test("parse expression", () => {
+test("tokenize expression", () => {
   const src = "   (   + hogepiyo #t(- 321 4565))";
   const lexer = new Lexer(src);
   lexer.tokenize();
   expect(lexer.tokens.length).toBe(10);
 });
 
-test("parse true false ", () => {
+test("tokenize true false ", () => {
   const src = "(#t #f)";
   const lexer = new Lexer(src);
   lexer.tokenize();
@@ -107,14 +107,14 @@ test("parse true false ", () => {
   expect(lexer.tokens[2].value).toBe(false);
 });
 
-test("parse quoted", () => {
+test("tokenize quoted", () => {
   const src = "(car '(a b c))";
   const lexer = new Lexer(src);
   lexer.tokenize();
   expect(lexer.tokens[2].type).toBe("QUOTE");
 });
 
-test("parse empty list", () => {
+test("tokenize empty list", () => {
   const src = "'()";
   const lexer = new Lexer(src);
   lexer.tokenize();
