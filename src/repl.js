@@ -1,5 +1,5 @@
-const Interpreter = require("./interpreter");
-const { display } = require("./nodes");
+import Interpreter from "./interpreter";
+import { display } from "./nodes";
 
 class REPL {
   constructor() {
@@ -21,4 +21,4 @@ class REPL {
   }
 }
 
-module.exports = REPL;
+export default REPL;

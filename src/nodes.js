@@ -1,21 +1,21 @@
-const { NODE_TYPES } = require("./constants");
+import { NODE_TYPES } from "./constants";
 
-const NULL = {
+export const NULL = {
   type: NODE_TYPES.NULL,
 };
 
-const TRUE = {
+export const TRUE = {
   type: NODE_TYPES.BOOLEAN,
   value: true,
   symbol: "#t",
 };
-const FALSE = {
+export const FALSE = {
   type: NODE_TYPES.BOOLEAN,
   value: false,
   symbol: "#f",
 };
 
-const toString = node => {
+export const toString = node => {
   if (node == null) {
     throw new Error("undefined node found");
   }
@@ -37,7 +37,7 @@ const toString = node => {
   return JSON.stringify(node, null, 2);
 };
 
-const buildPair = (car, cdr) => {
+export const buildPair = (car, cdr) => {
   if (car == null || cdr == null) {
     const msg = `cannot make pair. car: ${car}, cdr: ${cdr}`;
     throw new Error(msg);
@@ -49,7 +49,7 @@ const buildPair = (car, cdr) => {
   };
 };
 
-const buildProc = (name, assertion, body) => {
+export const buildProc = (name, assertion, body) => {
   return {
     type: NODE_TYPES.PROC,
     name,
@@ -58,7 +58,7 @@ const buildProc = (name, assertion, body) => {
   };
 };
 
-const buildNumber = num => {
+export const buildNumber = num => {
   const n = parseFloat(num);
   if (Number.isNaN(n)) {
     throw new Error(`failed to parse as number: ${num}`);
@@ -69,7 +69,7 @@ const buildNumber = num => {
   };
 };
 
-const display = node => {
+export const display = node => {
   if (node == null) {
     return "";
   }
@@ -106,15 +106,4 @@ const display = node => {
     default:
       return JSON.stringify(node);
   }
-};
-
-module.exports = {
-  buildPair: buildPair,
-  buildProc: buildProc,
-  buildNumber: buildNumber,
-  TRUE: TRUE,
-  FALSE: FALSE,
-  NULL: NULL,
-  toString: toString,
-  display: display,
 };

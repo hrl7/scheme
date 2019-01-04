@@ -1,4 +1,4 @@
-const REPL = require("./src/repl");
+import REPL from "./src/repl";
 
 process.stdin.setEncoding("utf8");
 

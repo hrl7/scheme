@@ -1,4 +1,4 @@
-const { display } = require("../src/nodes");
+import { display } from "../src/nodes";
 test("display test", () => {
   const list = {
     type: "PAIR",

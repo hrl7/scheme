@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "node index.js",
+    "start": "babel-node index.js",
+    "server": "webpack-dev-server",
+    "build": "webpack",
     "fix": "prettier --trailing-comma es5 --write \"src/*.js\" \"__tests__/*.js\" index.js"
   },
   "repository": {
@@ -19,10 +21,25 @@
   },
   "homepage": "https://github.com/hrl7/scheme#readme",
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-styled-components": "^1.10.0",
     "jest": "^23.6.0",
-    "prettier": "^1.15.3"
+    "prettier": "^1.15.3",
+    "regenerator-runtime": "^0.13.1",
+    "webpack": "^4.28.3",
+    "webpack-cli": "^3.2.0",
+    "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "radium": "^0.25.1",
+    "react": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2"
   }
 }

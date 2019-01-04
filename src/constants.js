@@ -1,4 +1,4 @@
-const TOKEN_TYPES = {
+export const TOKEN_TYPES = {
   IDENTIFIER: "IDENTIFIER",
   BOOLEAN: "BOOLEAN",
   KEYWORD: "KEYWORD",
@@ -8,7 +8,7 @@ const TOKEN_TYPES = {
   QUOTE: "QUOTE",
 };
 
-const NODE_TYPES = {
+export const NODE_TYPES = {
   EXPR: "EXPR",
   PROC_CALL: "PROC_CALL",
   NUMBER: "NUMBER",
@@ -22,8 +22,4 @@ const NODE_TYPES = {
   NULL: "NULL",
   PAIR: "PAIR",
   ERROR: "ERROR",
-};
-module.exports = {
-  TOKEN_TYPES: TOKEN_TYPES,
-  NODE_TYPES: NODE_TYPES,
 };

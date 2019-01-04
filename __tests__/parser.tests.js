@@ -1,5 +1,5 @@
-const Lexer = require("../src/lexer");
-const Parser = require("../src/parser");
+import Lexer from "../src/lexer";
+import Parser from "../src/parser";
 
 test("parse simple expression", () => {
   const lexer = new Lexer("(+ 1 2 3)");

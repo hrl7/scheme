@@ -1,4 +1,5 @@
-const debug = require("debug")("lexer");
+import Debug from "debug";
+const debug = Debug("lexer");
 
 // SYMBOLS represent single character sign.
 const SYMBOLS = {
@@ -169,4 +170,4 @@ class Lexer {
   }
 }
 
-module.exports = Lexer;
+export default Lexer;

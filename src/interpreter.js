@@ -1,8 +1,10 @@
-const debug = require("debug")("eval:run");
-const debugAssert = require("debug")("eval:assert");
-const Lexer = require("./lexer");
-const Parser = require("./parser");
-const { NODE_TYPES } = require("./constants");
+import Debug from "debug";
+import Lexer from "./lexer";
+import Parser from "./parser";
+import { NODE_TYPES } from "./constants";
+
+const debug = Debug("eval:run");
+const debugAssert = Debug("eval:assert");
 const {
   TRUE,
   FALSE,
@@ -240,4 +242,4 @@ class Interpreter {
   }
 }
 
-module.exports = Interpreter;
+export default Interpreter;

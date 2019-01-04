@@ -1,4 +1,4 @@
-const Interpreter = require("../src/interpreter");
+import Interpreter from "../src/interpreter";
 
 test("eval simple calculation", () => {
   const interpreter = new Interpreter();

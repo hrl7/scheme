@@ -1,8 +1,10 @@
-const debug = require("debug")("parser");
-const debugQuote = require("debug")("parser:quote");
-const debugProc = require("debug")("parser:proc");
-const debugExpr = require("debug")("parser:proc");
-const { TOKEN_TYPES } = require("./constants");
+import Debug from "debug";
+import { TOKEN_TYPES } from "./constants";
+
+const debug = Debug("parser");
+const debugQuote = Debug("parser:quote");
+const debugProc = Debug("parser:proc");
+const debugExpr = Debug("parser:proc");
 
 const toNode = token => {
   switch (token.type) {
@@ -234,4 +236,4 @@ class Parser {
   }
 }
 
-module.exports = Parser;
+export default Parser;

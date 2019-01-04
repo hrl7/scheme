@@ -1,4 +1,4 @@
-const REPL = require("../src/repl.js");
+import REPL from "../src/repl.js";
 
 test("run simple expr", () => {
   const repl = new REPL();
