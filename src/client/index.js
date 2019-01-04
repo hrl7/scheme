@@ -13,33 +13,41 @@ class App extends React.Component {
       results: [],
       buffer: ""
     };
+
     this.handleKeyPress = (e) => {
-      if (e.key === "Enter") {
-        if (this.input && this.input.value !== "") {
-          this.input.value = "";
-          this.setState({
-            logs: this.state.logs.concat(this.state.buffer ),
-          }, () => {
-            this.repl.run(this.state.buffer);
-            this.setState({
-              logs: this.state.logs.concat("==> " + this.repl.print()),
-              buffer: ""
-            });
-          });
-        }
+      if (e.key === "Enter" && this.input && this.input.value !== "") {
+
+        this.input.value = "";
+        const src = this.state.buffer;
+        this.setState({
+          logs: this.state.logs.concat(src)
+        }, () => this.runProgram(src));
       }
     };
+
+    this.runProgram = (src) => {
+      this.repl.run(src);
+      this.setState({
+        logs: this.state.logs.concat("==> " + this.repl.print()),
+        buffer: ""
+      });
+    };
+
     this.handleChange = (e) => {
       this.setState({ buffer: e.currentTarget.value });
+    };
+
+    this.focusToInput = () => {
+      this.input && this.input.focus();
     };
   }
 
   render() {
     return <div
       style={styles.container}
-      onClick={() => console.log(this.input) || this.input && this.input.focus}>
+      onClick={this.focusToInput}>
       <div>
-        {this.state.logs.map(log => [<tt>{log}</tt>,<br/>])}
+        {this.state.logs.map(log => [<span>{log}</span>, <br/>])}
       </div>
       >>><span>{this.state.buffer}</span>
       <input
@@ -57,7 +65,8 @@ const styles = {
     width: "50%",
     height: "100%",
     color: "#33ff33",
-    fontFamily: "Consolas, 'Courier New', Courier, Monaco, monospace"
+    fontFamily: "Consolas, 'Courier New', Courier, Monaco, monospace",
+    padding: "1em"
   },
   hiddenInput: {
     position: "absolute",
@@ -67,6 +76,5 @@ const styles = {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
-  console.log(document.getElementById("root"));
   ReactDOM.render(React.createElement(Radium(App), null), document.getElementById("root"));
 });
