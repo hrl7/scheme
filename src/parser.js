@@ -172,33 +172,30 @@ class Parser {
         expr: toNode(token),
       };
     }
-    let depth = 1;
     let currentNode = {
       type: "LIST",
       contents: [],
     };
     let stack = [];
+    let depth = 1;
     this.currentIndex++;
     token = this.tokens[this.currentIndex];
-    debugQuote(
-      "before loop: ",
-      this.currentIndex,
-      this.tokens[this.currentIndex].name
-    );
-    while (
-      token.type !== TOKEN_TYPES.RPAREN &&
-      depth > 0 &&
-      this.currentIndex < this.tokens.length
-    ) {
+
+    debugQuote("before loop: ", this.currentIndex, token);
+
+    do {
       debugQuote(
         "depth: ",
-        depth,
+        stack.length,
+        "stack: ",
+        stack,
         "currentNode: ",
         currentNode,
         "token: ",
         token.type,
         token.name
       );
+
       switch (token.type) {
         case TOKEN_TYPES.LPAREN: {
           depth++;
@@ -210,25 +207,30 @@ class Parser {
           break;
         }
         case TOKEN_TYPES.RPAREN: {
-          depth--;
           let n = currentNode;
-          currentNode = stack.pop();
-          currentNode.contents.push(n);
+          depth--;
+          if (depth !== 0) {
+            currentNode = stack.pop();
+            currentNode.contents.push(n);
+          }
           break;
         }
         default:
-          debugQuote("push: ", token);
+          debugQuote("Not found Paren, got: ", toNode(token).name);
           currentNode.contents.push(toNode(token));
       }
+
       this.currentIndex++;
       token = this.tokens[this.currentIndex];
-    }
+    } while (depth !== 0 && this.currentIndex < this.tokens.length);
+
     debugQuote(currentNode);
     if (currentNode.type === "LIST" && currentNode.contents === []) {
       return {
         type: "NULL",
       };
     }
+
     return {
       type: "QUOTED_EXPR",
       expr: currentNode,

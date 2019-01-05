@@ -181,3 +181,68 @@ test("parse quoted list", () => {
   expect(parser.program[0].expr.type).toBe("PROC_CALL");
   expect(parser.program[0].expr.operands[0].expr.contents[0].name).toBe("a");
 });
+
+test("parse nested list", () => {
+  const lexer = new Lexer("'((a))");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  expect(parser.program).toEqual([
+    {
+      type: "QUOTED_EXPR",
+      expr: {
+        type: "LIST",
+        contents: [
+          {
+            type: "LIST",
+            contents: [
+              {
+                type: "IDENTIFIER",
+                name: "a",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ]);
+});
+
+test("parse deep nested list", () => {
+  const lexer = new Lexer("'(((a) b) c)");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  expect(parser.program).toEqual([
+    {
+      type: "QUOTED_EXPR",
+      expr: {
+        type: "LIST",
+        contents: [
+          {
+            type: "LIST",
+            contents: [
+              {
+                type: "LIST",
+                contents: [
+                  {
+                    type: "IDENTIFIER",
+                    name: "a",
+                  },
+                ],
+              },
+              {
+                type: "IDENTIFIER",
+                name: "b",
+              },
+            ],
+          },
+          {
+            type: "IDENTIFIER",
+            name: "c",
+          },
+        ],
+      },
+    },
+  ]);
+});
