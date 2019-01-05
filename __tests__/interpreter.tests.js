@@ -114,3 +114,40 @@ test("eval empty list", () => {
   });
   expect(result).toEqual({ type: "NULL" });
 });
+
+test("eval nested list", () => {
+  const interpreter = new Interpreter();
+  const result = interpreter.eval({
+    type: "QUOTED_EXPR",
+    expr: {
+      type: "LIST",
+      contents: [
+        {
+          type: "LIST",
+          contents: [
+            {
+              type: "IDENTIFIER",
+              name: "a",
+            },
+          ],
+        },
+      ],
+    },
+  });
+  expect(result).toEqual({
+    type: "PAIR",
+    car: {
+      type: "PAIR",
+      car: {
+        type: "ATOM",
+        name: "a",
+      },
+      cdr: {
+        type: "NULL",
+      },
+    },
+    cdr: {
+      type: "NULL",
+    },
+  });
+});

@@ -153,6 +153,21 @@ class Interpreter {
     };
   }
 
+  evalList(expr) {
+    const length = expr.contents.length;
+    const contents = expr.contents;
+    if (length === 0) {
+      return NULL;
+    }
+    let i = length - 1;
+    let list = NULL;
+    while (i >= 0) {
+      list = buildPair(this.evalQuote(contents[i]), list);
+      i--;
+    }
+    return list;
+  }
+
   evalQuote(quoted) {
     switch (quoted.type) {
       case NODE_TYPES.IDENTIFIER:
@@ -162,22 +177,20 @@ class Interpreter {
         };
       case NODE_TYPES.NUMBER:
         return quoted;
+      case NODE_TYPES.LIST:
+        return this.evalList(quoted);
+      case NODE_TYPES.QUOTED_EXPR:
+      case NODE_TYPES.EXPR:
+        debug("quoted expr found. go through.");
+        break;
+      default: {
+        const msg = `found unrecognized expr: ${toString(quoted)}`;
+        throw new Error(msg);
+      }
     }
     debug("evalQuote", quoted && quoted.expr && quoted.expr.type, quoted);
     if (quoted.expr.type === NODE_TYPES.LIST) {
-      const length = quoted.expr.contents.length;
-      const contents = quoted.expr.contents;
-      if (length === 0) {
-        return NULL;
-      }
-      let i = length - 1;
-      let list = NULL;
-      while (i >= 0) {
-        list = buildPair(this.evalQuote(contents[i]), list);
-        i--;
-      }
-
-      return list;
+      return this.evalList(quoted.expr);
     }
     if (quoted.expr.type === NODE_TYPES.IDENTIFIER) {
       return {
