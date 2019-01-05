@@ -90,6 +90,7 @@ class Parser {
 
   // after finding lambda
   makeLambda() {
+    debug("make Lambda");
     let token = this.tokens[this.currentIndex];
     this.assertLPAREN(token, "LAMBDA EXPR");
     const node = {
@@ -105,7 +106,7 @@ class Parser {
         "token: ",
         token.type,
         "formals: ",
-        node.formals,
+        node.formals.map(n => n.name),
         "body: ",
         node.body
       );
@@ -114,20 +115,22 @@ class Parser {
           if (isReadingFormals) {
             isReadingFormals = false;
             finishedReadingFormals = true;
-          }
-          if (isReadingBody && finishedReadingFormals) {
+            debug("finish reading formals: ", node.formals.map(n => n.name));
+            debug("start reading body: ", node.body);
+            isReadingBody = true;
+            this.currentIndex++;
+            node.body.push(this.makeExpr());
+          } else if (isReadingBody && finishedReadingFormals) {
+            debug("finish reading body: ", node.body, token);
             return node;
           }
           break;
         }
         case TOKEN_TYPES.LPAREN: {
           if (!finishedReadingFormals && !isReadingBody) {
+            debug("start reading formals: ", node.formals.map(n => n.name));
             isReadingFormals = true;
-          }
-          if (finishedReadingFormals && !isReadingBody) {
-            isReadingBody = true;
-          }
-          if (isReadingBody) {
+          } else if (isReadingBody) {
             node.body.push(this.makeExpr());
           }
           break;
@@ -145,7 +148,7 @@ class Parser {
 
   makeExpr() {
     const token = this.tokens[this.currentIndex];
-    debugExpr("make expr: ", token.type);
+    debugExpr("make expr: ", token.type, token);
     if (token.type === TOKEN_TYPES.LPAREN) {
       this.currentIndex++;
       return {

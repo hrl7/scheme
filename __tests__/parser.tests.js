@@ -246,3 +246,14 @@ test("parse deep nested list", () => {
     },
   ]);
 });
+
+test("parse lambda with null", () => {
+  const lexer = new Lexer("((lambda (a b) a)) '(a (b)) '())");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  //expect(parser.program[0].expr.operator.expr.body[0]).toEqual({});
+  expect(parser.program[0].expr.operator.expr.body[0].type).toEqual(
+    "IDENTIFIER"
+  );
+});
