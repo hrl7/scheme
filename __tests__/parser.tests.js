@@ -426,20 +426,22 @@ test("parse deep nested list", () => {
 });
 
 test("parse lambda with null", () => {
-  const lexer = new Lexer("((lambda (a) a)) '())");
+  const src = "((lambda (a) a) '())";
+  const lexer = new Lexer(src);
   lexer.tokenize();
-  const parser = new Parser(lexer.tokens);
+  const parser = new Parser(lexer.tokens, src);
   parser.parse();
   console.log(JSON.stringify(parser.program[0], null, 2));
   expect(parser.program[0].expr.operator.type).toEqual("LAMBDA");
   expect(parser.program[0].expr.operator.body[0].type).toEqual("IDENTIFIER");
-  expect(parser.program[0].expr.operands[1].type).toEqual("QUOTED_EXPR");
+  expect(parser.program[0].expr.operands[0].type).toEqual("QUOTED_EXPR");
 });
 
 test("parse simple lambda ", () => {
-  const lexer = new Lexer("((lambda (a) (* a 2)) 4)");
+  const src = "((lambda (a) (* a 2)) 4)";
+  const lexer = new Lexer(src);
   lexer.tokenize();
-  const parser = new Parser(lexer.tokens);
+  const parser = new Parser(lexer.tokens, src);
   parser.parse();
   console.log(JSON.stringify(parser.program[0], null, 2));
   expect(parser.program[0].expr.operands[0].type).toEqual("NUMBER");
@@ -449,11 +451,13 @@ test("parse simple lambda ", () => {
 });
 
 test("parse proc call with 2 quotes", () => {
-  const lexer = new Lexer("((lambda (a b) (cons a b)) '(a b c) '(d e f))");
+  const src = "((lambda (a b) (cons a b)) '(a b c) '(d e f))";
+  const lexer = new Lexer(src);
   lexer.tokenize();
-  const parser = new Parser(lexer.tokens);
+  const parser = new Parser(lexer.tokens, src);
   parser.parse();
+  //console.log(lexer.tokens.map(t => {delete t.loc; return t}))
   console.log(JSON.stringify(parser.program[0], null, 2));
   expect(parser.program[0].expr.operands[0].type).toEqual("QUOTED_EXPR");
-  expect(parser.program[0].expr.operands).toEqual("PROC_CALL");
+  expect(parser.program[0].expr.operands[1].type).toEqual("QUOTED_EXPR");
 });

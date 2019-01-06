@@ -28,8 +28,9 @@ const toNode = token => {
 };
 
 class Parser {
-  constructor(tokens) {
+  constructor(tokens, src = null) {
     debug("init parser with: ", tokens);
+    this.src = src;
     this.tokens = tokens;
     this.program = [];
     this.currentIndex = 0;
@@ -43,11 +44,13 @@ class Parser {
 
   parse() {
     const node = this.makeExpr();
+    debug("finish parsing");
     this.program.push(node);
   }
 
   makeProcCall() {
     let token = this.tokens[this.currentIndex];
+    this.debugParsingPosition();
     debugProc("proc call. token: ", token);
     const expr = {
       type: "PROC_CALL",
@@ -96,9 +99,48 @@ class Parser {
     }
   }
 
+  debugParsingPosition(token = null) {
+    if (this.src == null) {
+      return;
+    }
+    const targetToken = token != null ? token : this.tokens[this.currentIndex];
+
+    const reset = "\u001b[0m";
+    const cyan = "\u001b[36m";
+
+    const loc = targetToken.loc;
+    if (loc == null) {
+      return;
+    }
+    if (typeof process !== "undefined") {
+      debug(
+        "current parsing token: \n  " +
+          reset +
+          this.src.slice(0, loc.start.col) +
+          cyan +
+          this.src.slice(loc.start.col, loc.end.col + 1) +
+          reset +
+          this.src.slice(loc.end.col + 1)
+      );
+    } else {
+      debug(
+        "current parsing token: \n  " +
+          "%c" +
+          this.src.slice(0, loc.start.col) +
+          "%c" +
+          this.src.slice(loc.start.col, loc.end.col + 1) +
+          "%c" +
+          this.src.slice(loc.end.col + 1),
+        "color: black",
+        "color: cyan",
+        "color: black"
+      );
+    }
+  }
   // after finding lambda
   makeLambda() {
     debugLambda("make Lambda");
+    this.debugParsingPosition();
     let token = this.tokens[this.currentIndex];
     this.assertLPAREN(token, "LAMBDA EXPR");
     const node = {
@@ -164,6 +206,7 @@ class Parser {
   makeExpr() {
     const token = this.tokens[this.currentIndex];
     debugExpr("make expr: ", token.type, token);
+    this.debugParsingPosition();
     if (token.type === TOKEN_TYPES.LPAREN) {
       this.currentIndex++;
       const nextToken = this.tokens[this.currentIndex];
@@ -198,6 +241,7 @@ class Parser {
     this.currentIndex++;
     let token = this.tokens[this.currentIndex];
     debugQuote("quote expr: ", this.tokens[this.currentIndex + 1]);
+    this.debugParsingPosition();
     if (token.type !== TOKEN_TYPES.LPAREN) {
       debugQuote("atom found : ", token);
       return {
@@ -255,6 +299,7 @@ class Parser {
 
       this.currentIndex++;
       token = this.tokens[this.currentIndex];
+      this.debugParsingPosition();
     } while (depth !== 0 && this.currentIndex < this.tokens.length);
 
     debugQuote(currentNode);
