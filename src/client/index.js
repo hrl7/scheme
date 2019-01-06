@@ -2,11 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Radium from "radium";
 import REPL from "../repl";
+import Lexer from "../lexer";
+import Tokens from "./tokens"
 
 class App extends React.Component {
   constructor() {
     super();
     this.repl = new REPL();
+    this.lexer = new Lexer();
     this.input = null;
     this.state = {
       logs: [],
@@ -16,11 +19,13 @@ class App extends React.Component {
 
     this.handleKeyPress = (e) => {
       if (e.key === "Enter" && this.input && this.input.value !== "") {
-
         this.input.value = "";
         const src = this.state.buffer;
+        this.lexer.reset();
+        this.lexer.tokenize(src);
+        const tokens = this.lexer.tokens;
         this.setState({
-          logs: this.state.logs.concat(src)
+          logs: this.state.logs.concat(tokens),
         }, () => this.runProgram(src));
       }
     };
@@ -47,7 +52,7 @@ class App extends React.Component {
       style={styles.container}
       onClick={this.focusToInput}>
       <div>
-        {this.state.logs.map(log => [<span>{log}</span>, <br/>])}
+        <Tokens tokens={this.state.logs} />
       </div>
       >>><span>{this.state.buffer}</span>
       <input

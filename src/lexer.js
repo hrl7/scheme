@@ -50,7 +50,10 @@ class Lexer {
     this.buf = "";
   }
 
-  tokenize() {
+  tokenize(src) {
+    if (typeof src === "string") {
+      this.src = src;
+    }
     const i = this.currentIndex;
     let length = this.src.length;
     if (i >= length) {
