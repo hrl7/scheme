@@ -19,6 +19,9 @@ class Env {
   constructor(table) {
     this.table = table || {};
   }
+  set(name, value) {
+    this.table[name] = value;
+  }
 }
 
 class ArgumentsError {
@@ -45,6 +48,9 @@ class Interpreter {
         Object.assign(acc, { [proc[1]]: this.makeProc.apply(this, proc) }),
       procs
     );
+    procs["define"] = this.makeProc(["ATOM", "*"], "define", operands => {
+      this.globalEnv.set(operands[0].name, operands[1]);
+    });
     this.globalEnv = new Env(procs);
     this.stack = [];
   }
@@ -255,19 +261,27 @@ class Interpreter {
       return result;
     }
 
-    if (
-      ast.operator.type === NODE_TYPES.IDENTIFIER &&
-      ast.operator.name === "quote"
-    ) {
-      debug("quote macro");
-      if (ast.operands.length !== 1) {
-        return new ArgumentsError(
-          `wrong number of arguments: quote require 1, but got ${
-            ast.operands.length
-          }`
-        );
+    if (ast.operator.type === NODE_TYPES.IDENTIFIER) {
+      if (ast.operator.name === "quote") {
+        debug("quote macro");
+        if (ast.operands.length !== 1) {
+          return new ArgumentsError(
+            `wrong number of arguments: quote require 1, but got ${
+              ast.operands.length
+            }`
+          );
+        }
+        return this.evalQuote(ast.operands[0]);
       }
-      return this.evalQuote(ast.operands[0]);
+      if (ast.operator.name === "define") {
+        if (ast.operands[0].type !== NODE_TYPES.IDENTIFIER) {
+          return new ArgumentsError(`${ast.operands[0]} is invalid name`);
+        }
+        ast.operands[0] = {
+          type: NODE_TYPES.ATOM,
+          name: ast.operands[0].name,
+        };
+      }
     }
 
     debug("eval proc");
