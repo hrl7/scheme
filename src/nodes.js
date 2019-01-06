@@ -98,6 +98,9 @@ export const display = node => {
         if (n.type === NODE_TYPES.PAIR) {
           str += " " + display(n.car);
           n = n.cdr;
+        } else {
+          str += " " + display(n);
+          break;
         }
       }
       str += ")";
