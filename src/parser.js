@@ -73,18 +73,21 @@ class Parser {
           ) {
             this.currentIndex += 2;
             expr.operator = this.makeLambda();
+            break;
           }
         }
         default:
           if (expr.operator == null) {
             expr.operator = this.makeExpr();
           } else {
+            debugProc("found next operand: ", token);
             expr.operands.push(this.makeExpr());
           }
       }
       this.currentIndex++;
       token = this.tokens[this.currentIndex];
       debugProc("next: ", token);
+      this.debugParsingPosition();
     }
     debugProc("finish to parse proc call: ", expr);
     return expr;
@@ -175,7 +178,6 @@ class Parser {
             node.body.push(this.makeExpr());
           } else if (isReadingBody && finishedReadingFormals) {
             debugLambda("finish reading body: ", node.body, token);
-            this.currentIndex++;
             return node;
           }
           break;
@@ -309,6 +311,7 @@ class Parser {
       };
     }
 
+    this.currentIndex--;
     return {
       type: "QUOTED_EXPR",
       expr: currentNode,
