@@ -89,6 +89,7 @@ class Interpreter {
     this.lexer.src = src;
     this.lexer.tokenize();
     this.parser.tokens = this.lexer.tokens;
+    this.parser.src = src;
     this.parser.parse();
     this.program = this.parser.program;
 
