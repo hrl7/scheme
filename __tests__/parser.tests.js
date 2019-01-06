@@ -461,3 +461,32 @@ test("parse proc call with 2 quotes", () => {
   expect(parser.program[0].expr.operands[0].type).toEqual("QUOTED_EXPR");
   expect(parser.program[0].expr.operands[1].type).toEqual("QUOTED_EXPR");
 });
+
+test("parse twice", () => {
+  const src = "(define twice (lambda (x) (* 2 x)))";
+  const lexer = new Lexer(src);
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens, src);
+  parser.parse();
+  console.log(
+    lexer.tokens.map(t => {
+      delete t.loc;
+      return t;
+    })
+  );
+  console.log(JSON.stringify(parser.program[0], null, 2));
+  expect(parser.program[0].expr.operands[0].type).toEqual("IDENTIFIER");
+  expect(parser.program[0].expr.operands[1].type).toEqual("LAMBDA");
+});
+
+test("makeProcCall", () => {
+  const src = "((lambda (a) '()) 3)";
+  const lexer = new Lexer(src);
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens, src);
+  const result = parser.makeExpr();
+  parser.debugParsingPosition();
+  console.log(result, parser.currentIndex, parser.tokens[parser.currentIndex]);
+  expect(parser.tokens[parser.currentIndex].type).toBe("RPAREN");
+  expect(parser.currentIndex).toBe(11);
+});

@@ -105,13 +105,15 @@ class Interpreter {
   eval(ast) {
     debug("eval: ", toString(ast));
     switch (ast.type) {
+      case NODE_TYPES.ATOM:
+        return ast.name;
+      case NODE_TYPES.IDENTIFIER:
+        return this.evalIdentifier(ast);
       case NODE_TYPES.EXPR: {
         return this.evalExpr(ast.expr);
-        break;
       }
       case NODE_TYPES.QUOTED_EXPR: {
         return this.evalQuote(ast);
-        break;
       }
       default:
     }

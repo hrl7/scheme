@@ -14,14 +14,14 @@ const toNode = token => {
       return {
         type: "NUMBER",
         value: token.value,
-        loc: token.loc,
+        loc: token.loc || null,
       };
     }
     case TOKEN_TYPES.IDENTIFIER: {
       return {
         type: "IDENTIFIER",
         name: token.identifier,
-        loc: token.loc,
+        loc: token.loc || null,
       };
     }
   }
@@ -48,56 +48,24 @@ class Parser {
     this.program.push(node);
   }
 
-  makeProcCall() {
-    let token = this.tokens[this.currentIndex];
-    this.debugParsingPosition();
-    debugProc("proc call. token: ", token);
-    const expr = {
-      type: "PROC_CALL",
-      operator: null,
-      operands: [],
-    };
-    while (
-      token != null &&
-      token.type !== TOKEN_TYPES.RPAREN &&
-      this.currentIndex < this.tokens.length
-    ) {
-      switch (token.type) {
-        case TOKEN_TYPES.RPAREN:
-          break;
-        case TOKEN_TYPES.LPAREN: {
-          const nextToken = this.tokens[this.currentIndex + 1];
-          if (
-            nextToken.type === TOKEN_TYPES.KEYWORD &&
-            nextToken.keyword === "lambda"
-          ) {
-            this.currentIndex += 2;
-            expr.operator = this.makeLambda();
-            break;
-          }
-        }
-        default:
-          if (expr.operator == null) {
-            expr.operator = this.makeExpr();
-          } else {
-            debugProc("found next operand: ", token);
-            expr.operands.push(this.makeExpr());
-          }
-      }
-      this.currentIndex++;
-      token = this.tokens[this.currentIndex];
-      debugProc("next: ", token);
-      this.debugParsingPosition();
-    }
-    debugProc("finish to parse proc call: ", expr);
-    return expr;
-  }
-
-  assertLPAREN(token, nodeType) {
+  assertLPAREN() {
+    const token = this.tokens[this.currentIndex];
     if (token.type !== TOKEN_TYPES.LPAREN) {
-      const msg = `failed to parse ${nodeType}. expected '(' but found ${
+      const msg = `failed to parse. expected '(' but found ${token.type}`;
+      throw new Error(msg);
+    }
+  }
+  assertLambda() {
+    const token = this.tokens[this.currentIndex];
+    const nextToken = this.tokens[this.currentIndex + 1];
+    if (
+      token.type !== TOKEN_TYPES.LPAREN ||
+      nextToken.type !== TOKEN_TYPES.KEYWORD ||
+      nextToken.keyword !== "lambda"
+    ) {
+      const msg = `failed to parse. expected 'lambda' but found ${
         token.type
-      }`;
+      }, ${nextToken.type}`;
       throw new Error(msg);
     }
   }
@@ -111,6 +79,9 @@ class Parser {
     const reset = "\u001b[0m";
     const cyan = "\u001b[36m";
 
+    if (targetToken == null) {
+      return;
+    }
     const loc = targetToken.loc;
     if (loc == null) {
       return;
@@ -140,12 +111,68 @@ class Parser {
       );
     }
   }
-  // after finding lambda
-  makeLambda() {
-    debugLambda("make Lambda");
-    this.debugParsingPosition();
+
+  makeProcCall() {
     let token = this.tokens[this.currentIndex];
-    this.assertLPAREN(token, "LAMBDA EXPR");
+    debugProc("start parsing proc call. token: ", token.type);
+    this.debugParsingPosition();
+    this.assertLPAREN();
+    this.currentIndex++;
+    token = this.tokens[this.currentIndex];
+    const expr = {
+      type: "PROC_CALL",
+      operator: null,
+      operands: [],
+    };
+    let depth = 1;
+    do {
+      this.debugParsingPosition();
+      switch (token.type) {
+        case TOKEN_TYPES.RPAREN:
+          depth--;
+          break;
+        case TOKEN_TYPES.LPAREN: {
+          const nextToken = this.tokens[this.currentIndex + 1];
+          if (
+            expr.operator === null &&
+            nextToken.type === TOKEN_TYPES.KEYWORD &&
+            nextToken.keyword === "lambda"
+          ) {
+            expr.operator = this.makeLambda();
+            this.debugParsingPosition();
+            debugProc("back to proc from lambda");
+            break;
+          }
+        }
+        default:
+          if (expr.operator == null) {
+            expr.operator = this.makeExpr();
+          } else {
+            debugProc("found next operand: ", token);
+            expr.operands.push(this.makeExpr());
+          }
+      }
+      this.currentIndex++;
+      token = this.tokens[this.currentIndex];
+      debugProc("depth: ", depth, "next: ", token);
+    } while (
+      token != null &&
+      depth !== 0 &&
+      this.currentIndex < this.tokens.length
+    );
+
+    debugProc("finish parsing proc call: ", expr);
+    this.currentIndex--;
+    this.debugParsingPosition();
+    return expr;
+  }
+
+  makeLambda() {
+    debugLambda("start parsing Lambda ");
+    this.debugParsingPosition();
+    this.assertLambda();
+    this.currentIndex += 2;
+    let token = this.tokens[this.currentIndex];
     const node = {
       type: "LAMBDA",
       formals: [],
@@ -156,6 +183,8 @@ class Parser {
     let finishedReadingFormals = false;
     while (token != null && this.currentIndex < this.tokens.length) {
       debugLambda(
+        isReadingBody,
+        finishedReadingFormals,
         "token: ",
         token.type,
         "formals: ",
@@ -177,7 +206,8 @@ class Parser {
             this.currentIndex++;
             node.body.push(this.makeExpr());
           } else if (isReadingBody && finishedReadingFormals) {
-            debugLambda("finish reading body: ", node.body, token);
+            debugLambda("finish parsing lambda: ", node.formals, node.body);
+            this.debugParsingPosition();
             return node;
           }
           break;
@@ -199,6 +229,7 @@ class Parser {
             node.formals.push(toNode(token));
           }
       }
+      this.debugParsingPosition();
       this.currentIndex++;
       token = this.tokens[this.currentIndex];
     }
@@ -207,11 +238,10 @@ class Parser {
 
   makeExpr() {
     const token = this.tokens[this.currentIndex];
-    debugExpr("make expr: ", token.type, token);
+    debugExpr("start parsing expr: ", token.type, token);
     this.debugParsingPosition();
     if (token.type === TOKEN_TYPES.LPAREN) {
-      this.currentIndex++;
-      const nextToken = this.tokens[this.currentIndex];
+      const nextToken = this.tokens[this.currentIndex + 1];
       debugExpr(
         "next token: ",
         nextToken.type,
@@ -223,9 +253,9 @@ class Parser {
         nextToken.type === TOKEN_TYPES.KEYWORD &&
         nextToken.keyword === "lambda"
       ) {
-        this.currentIndex++;
         return this.makeLambda();
       }
+
       return {
         type: "EXPR",
         expr: this.makeProcCall(),
