@@ -124,6 +124,8 @@ class Interpreter {
         return this.evalProcCall(expr);
       case NODE_TYPES.IDENTIFIER:
         return this.evalIdentifier(expr);
+      case NODE_TYPES.NULL:
+      case NODE_TYPES.ATOM:
       case NODE_TYPES.PAIR:
       case NODE_TYPES.NUMBER:
       case NODE_TYPES.PROC:
@@ -135,7 +137,8 @@ class Interpreter {
       case NODE_TYPES.LAMBDA:
         return this.evalLambda(expr);
       default:
-        debug("UNRECOGNIZED Expr type: ", expr.type);
+        const msg = "UNRECOGNIZED Expr type: " + expr.type;
+        throw new Error(msg);
     }
   }
 

@@ -37,7 +37,7 @@ test("run lambda car", () => {
 
 test("run lambda car cons ", () => {
   const repl = new REPL();
-  repl.run("((lambda (a b) (cons (car a) b)) '(a (b)) '())");
+  repl.run("((lambda (c d) (cons (car c) d)) '(a (b)) '())");
   const result = repl.print();
   expect(result).toBe("(a)");
 });
