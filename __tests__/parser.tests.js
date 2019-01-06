@@ -264,3 +264,13 @@ test("parse simple lambda ", () => {
     "PROC_CALL"
   );
 });
+
+test("parse proc call with 2 quotes", () => {
+  const lexer = new Lexer("((lambda (a b) (cons a b)) '(a b c) '(d e f))");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  expect(parser.program[0]).toEqual({});
+  expect(parser.program[0].expr.operands[0].type).toEqual("QUOTED_EXPR");
+  expect(parser.program[0].expr.operands).toEqual("PROC_CALL");
+});
