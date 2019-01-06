@@ -279,6 +279,10 @@ class Interpreter {
     debug("eval operands");
     const operands = ast.operands.map(this.evalExpr.bind(this));
     debug("evaluated operands: ", operands);
+    const errors = operands.filter(o => o.type === "ERROR");
+    if (errors.length > 0) {
+      return errors;
+    }
     const err = proc.assertion(operands);
     if (err != null) {
       return err;
