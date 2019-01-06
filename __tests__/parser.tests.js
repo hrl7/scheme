@@ -175,6 +175,7 @@ test("parse quoted list", () => {
   lexer.tokenize();
   const parser = new Parser(lexer.tokens);
   parser.parse();
+  console.log(JSON.stringify(parser.program[0], null, 2));
   expect(parser.program[0].expr.type).toBe("PROC_CALL");
   expect(parser.program[0].expr.operands[0].expr.contents[0].name).toBe("a");
 });
@@ -249,6 +250,7 @@ test("parse lambda with null", () => {
   lexer.tokenize();
   const parser = new Parser(lexer.tokens);
   parser.parse();
+  console.log(JSON.stringify(parser.program[0], null, 2));
   expect(parser.program[0].expr.operator.type).toEqual("LAMBDA");
   expect(parser.program[0].expr.operator.body[0].type).toEqual("IDENTIFIER");
   expect(parser.program[0].expr.operands[1].type).toEqual("QUOTED_EXPR");
@@ -259,6 +261,7 @@ test("parse simple lambda ", () => {
   lexer.tokenize();
   const parser = new Parser(lexer.tokens);
   parser.parse();
+  console.log(JSON.stringify(parser.program[0], null, 2));
   expect(parser.program[0].expr.operands[0].type).toEqual("NUMBER");
   expect(parser.program[0].expr.operator.body[0].expr.type).toEqual(
     "PROC_CALL"
@@ -270,7 +273,7 @@ test("parse proc call with 2 quotes", () => {
   lexer.tokenize();
   const parser = new Parser(lexer.tokens);
   parser.parse();
-  expect(parser.program[0]).toEqual({});
+  console.log(JSON.stringify(parser.program[0], null, 2));
   expect(parser.program[0].expr.operands[0].type).toEqual("QUOTED_EXPR");
   expect(parser.program[0].expr.operands).toEqual("PROC_CALL");
 });
