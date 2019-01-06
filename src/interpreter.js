@@ -67,6 +67,10 @@ class Interpreter {
       for (i = 0; i < operands.length; i++) {
         const spec = argumentsSpec[i];
         const operand = operands[i];
+        if (operand == null) {
+          const msg = `operand is undefined, operands: ${operands}, at index: ${i}`;
+          throw new Error(msg);
+        }
         if (spec !== "*" && spec !== operand.type) {
           return new ArgumentsError(
             `${spec} required, but got ${operands.map(toString)}`
@@ -119,6 +123,7 @@ class Interpreter {
         return this.evalProcCall(expr);
       case NODE_TYPES.IDENTIFIER:
         return this.evalIdentifier(expr);
+      case NODE_TYPES.PAIR:
       case NODE_TYPES.NUMBER:
       case NODE_TYPES.PROC:
         return expr;
@@ -126,9 +131,30 @@ class Interpreter {
         return this.evalExpr(expr.expr);
       case NODE_TYPES.QUOTED_EXPR:
         return this.evalQuote(expr);
+      case NODE_TYPES.LAMBDA:
+        return this.evalLambda(expr);
       default:
         debug("UNRECOGNIZED Expr type: ", expr.type);
     }
+  }
+
+  evalLambda(expr) {
+    const spec = [...new Array(expr.formals.length)].map(_ => "*");
+    return this.makeProc(spec, "", operands => {
+      debug("call lambda: ", operands);
+      const table = expr.formals.reduce(
+        (acc, variable, i) => ({
+          ...acc,
+          [variable.name]: this.evalExpr(operands[i]),
+        }),
+        {}
+      );
+      this.stack.push(new Env(table));
+      debug("apply lambda: ", expr.body);
+      const result = this.evalProcCall(expr.body);
+      this.stack.pop();
+      return result;
+    });
   }
 
   evalIdentifier(ident) {
@@ -215,6 +241,14 @@ class Interpreter {
 
   evalProcCall(ast) {
     debug("evalProcCall: ", toString(ast));
+    if (Array.isArray(ast)) {
+      let i, result;
+      for (i = 0; i < ast.length; i++) {
+        result = this.evalProcCall(ast[i].expr);
+      }
+      return result;
+    }
+
     if (
       ast.operator.type === NODE_TYPES.IDENTIFIER &&
       ast.operator.name === "quote"

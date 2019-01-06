@@ -20,3 +20,24 @@ test("nested", () => {
   const result = repl.print();
   expect(result).toBe("14");
 });
+
+test("run lambda simple", () => {
+  const repl = new REPL();
+  repl.run("((lambda (a) (* a 2)) 4)");
+  const result = repl.print();
+  expect(result).toBe("8");
+});
+
+test("run lambda car", () => {
+  const repl = new REPL();
+  repl.run("((lambda (a) (car a)) '(b c))");
+  const result = repl.print();
+  expect(result).toBe("b");
+});
+
+test("run lambda car cons ", () => {
+  const repl = new REPL();
+  repl.run("((lambda (a b) (cons (car a) b)) '(a (b)) '())");
+  const result = repl.print();
+  expect(result).toBe("(a)");
+});

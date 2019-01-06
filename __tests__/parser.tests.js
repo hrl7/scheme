@@ -41,34 +41,31 @@ test("parse lambda expression", () => {
   parser.parse();
   expect(parser.program).toEqual([
     {
-      type: "EXPR",
-      expr: {
-        type: "LAMBDA",
-        formals: [
-          {
-            type: "IDENTIFIER",
-            name: "hoge",
-          },
-        ],
-        body: [
-          {
-            type: "EXPR",
-            expr: {
-              type: "PROC_CALL",
-              operator: {
-                type: "IDENTIFIER",
-                name: "piyo",
-              },
-              operands: [
-                {
-                  type: "IDENTIFIER",
-                  name: "hoge",
-                },
-              ],
+      type: "LAMBDA",
+      formals: [
+        {
+          type: "IDENTIFIER",
+          name: "hoge",
+        },
+      ],
+      body: [
+        {
+          type: "EXPR",
+          expr: {
+            type: "PROC_CALL",
+            operator: {
+              type: "IDENTIFIER",
+              name: "piyo",
             },
+            operands: [
+              {
+                type: "IDENTIFIER",
+                name: "hoge",
+              },
+            ],
           },
-        ],
-      },
+        },
+      ],
     },
   ]);
 });
@@ -248,12 +245,22 @@ test("parse deep nested list", () => {
 });
 
 test("parse lambda with null", () => {
-  const lexer = new Lexer("((lambda (a b) a)) '(a (b)) '())");
+  const lexer = new Lexer("((lambda (a) a)) '())");
   lexer.tokenize();
   const parser = new Parser(lexer.tokens);
   parser.parse();
-  //expect(parser.program[0].expr.operator.expr.body[0]).toEqual({});
-  expect(parser.program[0].expr.operator.expr.body[0].type).toEqual(
-    "IDENTIFIER"
+  expect(parser.program[0].expr.operator.type).toEqual("LAMBDA");
+  expect(parser.program[0].expr.operator.body[0].type).toEqual("IDENTIFIER");
+  expect(parser.program[0].expr.operands[1].type).toEqual("QUOTED_EXPR");
+});
+
+test("parse simple lambda ", () => {
+  const lexer = new Lexer("((lambda (a) (* a 2)) 4)");
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens);
+  parser.parse();
+  expect(parser.program[0].expr.operands[0].type).toEqual("NUMBER");
+  expect(parser.program[0].expr.operator.body[0].expr.type).toEqual(
+    "PROC_CALL"
   );
 });
