@@ -14,12 +14,14 @@ const toNode = token => {
       return {
         type: "NUMBER",
         value: token.value,
+        loc: token.loc,
       };
     }
     case TOKEN_TYPES.IDENTIFIER: {
       return {
         type: "IDENTIFIER",
         name: token.identifier,
+        loc: token.loc,
       };
     }
   }

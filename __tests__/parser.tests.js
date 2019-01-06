@@ -14,19 +14,59 @@ test("parse simple expression", () => {
         operator: {
           type: "IDENTIFIER",
           name: "+",
+          loc: {
+            end: {
+              col: 1,
+              line: 0,
+            },
+            start: {
+              col: 1,
+              line: 0,
+            },
+          },
         },
         operands: [
           {
             type: "NUMBER",
             value: 1,
+            loc: {
+              end: {
+                col: 3,
+                line: 0,
+              },
+              start: {
+                col: 3,
+                line: 0,
+              },
+            },
           },
           {
             type: "NUMBER",
             value: 2,
+            loc: {
+              end: {
+                col: 5,
+                line: 0,
+              },
+              start: {
+                col: 5,
+                line: 0,
+              },
+            },
           },
           {
             type: "NUMBER",
             value: 3,
+            loc: {
+              end: {
+                col: 7,
+                line: 0,
+              },
+              start: {
+                col: 7,
+                line: 0,
+              },
+            },
           },
         ],
       },
@@ -46,6 +86,16 @@ test("parse lambda expression", () => {
         {
           type: "IDENTIFIER",
           name: "hoge",
+          loc: {
+            end: {
+              col: 12,
+              line: 0,
+            },
+            start: {
+              col: 9,
+              line: 0,
+            },
+          },
         },
       ],
       body: [
@@ -56,11 +106,31 @@ test("parse lambda expression", () => {
             operator: {
               type: "IDENTIFIER",
               name: "piyo",
+              loc: {
+                end: {
+                  col: 19,
+                  line: 0,
+                },
+                start: {
+                  col: 16,
+                  line: 0,
+                },
+              },
             },
             operands: [
               {
                 type: "IDENTIFIER",
                 name: "hoge",
+                loc: {
+                  end: {
+                    col: 24,
+                    line: 0,
+                  },
+                  start: {
+                    col: 21,
+                    line: 0,
+                  },
+                },
               },
             ],
           },
@@ -86,6 +156,16 @@ test("parse nested expression", () => {
             operator: {
               type: "IDENTIFIER",
               name: "hoge",
+              loc: {
+                end: {
+                  col: 5,
+                  line: 0,
+                },
+                start: {
+                  col: 2,
+                  line: 0,
+                },
+              },
             },
             operands: [],
           },
@@ -98,11 +178,31 @@ test("parse nested expression", () => {
               operator: {
                 type: "IDENTIFIER",
                 name: "piyo",
+                loc: {
+                  end: {
+                    col: 12,
+                    line: 0,
+                  },
+                  start: {
+                    col: 9,
+                    line: 0,
+                  },
+                },
               },
               operands: [
                 {
                   type: "IDENTIFIER",
                   name: "hoge",
+                  loc: {
+                    end: {
+                      col: 17,
+                      line: 0,
+                    },
+                    start: {
+                      col: 14,
+                      line: 0,
+                    },
+                  },
                 },
               ],
             },
@@ -126,6 +226,16 @@ test("parse expr includes quote", () => {
         operator: {
           type: "IDENTIFIER",
           name: "car",
+          loc: {
+            end: {
+              col: 3,
+              line: 0,
+            },
+            start: {
+              col: 1,
+              line: 0,
+            },
+          },
         },
         operands: [
           {
@@ -136,14 +246,44 @@ test("parse expr includes quote", () => {
                 {
                   type: "IDENTIFIER",
                   name: "a",
+                  loc: {
+                    end: {
+                      col: 7,
+                      line: 0,
+                    },
+                    start: {
+                      col: 7,
+                      line: 0,
+                    },
+                  },
                 },
                 {
                   type: "IDENTIFIER",
                   name: "b",
+                  loc: {
+                    end: {
+                      col: 9,
+                      line: 0,
+                    },
+                    start: {
+                      col: 9,
+                      line: 0,
+                    },
+                  },
                 },
                 {
                   type: "IDENTIFIER",
                   name: "c",
+                  loc: {
+                    end: {
+                      col: 11,
+                      line: 0,
+                    },
+                    start: {
+                      col: 11,
+                      line: 0,
+                    },
+                  },
                 },
               ],
             },
@@ -197,6 +337,16 @@ test("parse nested list", () => {
               {
                 type: "IDENTIFIER",
                 name: "a",
+                loc: {
+                  end: {
+                    col: 3,
+                    line: 0,
+                  },
+                  start: {
+                    col: 3,
+                    line: 0,
+                  },
+                },
               },
             ],
           },
@@ -226,18 +376,48 @@ test("parse deep nested list", () => {
                   {
                     type: "IDENTIFIER",
                     name: "a",
+                    loc: {
+                      end: {
+                        col: 4,
+                        line: 0,
+                      },
+                      start: {
+                        col: 4,
+                        line: 0,
+                      },
+                    },
                   },
                 ],
               },
               {
                 type: "IDENTIFIER",
                 name: "b",
+                loc: {
+                  end: {
+                    col: 7,
+                    line: 0,
+                  },
+                  start: {
+                    col: 7,
+                    line: 0,
+                  },
+                },
               },
             ],
           },
           {
             type: "IDENTIFIER",
             name: "c",
+            loc: {
+              end: {
+                col: 10,
+                line: 0,
+              },
+              start: {
+                col: 10,
+                line: 0,
+              },
+            },
           },
         ],
       },
