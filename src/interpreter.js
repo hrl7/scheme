@@ -121,9 +121,18 @@ class Interpreter {
 
   evalExpr(expr) {
     debug("evalExpr: ", toString(expr));
+    if (Array.isArray(expr)) {
+      let i, result;
+      for (i = 0; i < expr.length; i++) {
+        result = this.evalExpr(expr[i]);
+      }
+      return result;
+    }
     switch (expr.type) {
       case NODE_TYPES.PROC_CALL:
         return this.evalProcCall(expr);
+      case NODE_TYPES.COND:
+        return this.evalCond(expr);
       case NODE_TYPES.IDENTIFIER:
         return this.evalIdentifier(expr);
       case NODE_TYPES.BOOLEAN:
@@ -150,7 +159,12 @@ class Interpreter {
     let testExpr = expr.clauses[i].test;
     do {
       const result = this.evalExpr(testExpr);
-      if (result.type === NODE_TYPES.BOOLEAN && result.value) {
+      if (result.type !== NODE_TYPES.BOOLEAN) {
+        const msg =
+          "test clause must return boolean, but got: " + JSON.stringify(result);
+        throw new Error(msg);
+      }
+      if (result.value) {
         return this.evalExpr(expr.clauses[i].result);
       }
       i++;
@@ -171,7 +185,7 @@ class Interpreter {
       );
       this.stack.push(new Env(table));
       debug("apply lambda: ", expr.body);
-      const result = this.evalProcCall(expr.body);
+      const result = this.evalExpr(expr.body);
       this.stack.pop();
       return result;
     });
@@ -261,13 +275,6 @@ class Interpreter {
 
   evalProcCall(ast) {
     debug("evalProcCall: ", toString(ast));
-    if (Array.isArray(ast)) {
-      let i, result;
-      for (i = 0; i < ast.length; i++) {
-        result = this.evalProcCall(ast[i].expr);
-      }
-      return result;
-    }
 
     if (ast.operator.type === NODE_TYPES.IDENTIFIER) {
       if (ast.operator.name === "quote") {
