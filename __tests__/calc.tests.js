@@ -41,3 +41,19 @@ test("run lambda car cons ", () => {
   const result = repl.print();
   expect(result).toBe("(a)");
 });
+
+test("run lat?", () => {
+  const repl = new REPL();
+  repl.run("(define atom? (lambda (x) (and (not (pair? x)) (not (null? x)))))");
+  repl.run(
+    "(define lat? (lambda (lst) (cond ((null? lst) #t) ((atom? (car lst)) (lat? (cdr lst))) (else #f))))"
+  );
+  repl.run("(lat? '())");
+  expect(repl.print()).toBe("#t");
+  repl.run("(lat? '(a))");
+  expect(repl.print()).toBe("#t");
+  repl.run("(lat? '(a b c d))");
+  expect(repl.print()).toBe("#t");
+  repl.run("(lat? '(a (b c) d))");
+  expect(repl.print()).toBe("#f");
+});

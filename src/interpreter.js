@@ -155,9 +155,10 @@ class Interpreter {
   }
 
   evalCond(expr) {
-    let i = 0;
-    let testExpr = expr.clauses[i].test;
+    let testExpr,
+      i = 0;
     do {
+      testExpr = expr.clauses[i].test;
       const result = this.evalExpr(testExpr);
       if (result.type !== NODE_TYPES.BOOLEAN) {
         const msg =
@@ -169,6 +170,7 @@ class Interpreter {
       }
       i++;
     } while (i < expr.clauses.length);
+    debug("all tests return false. go else");
     return this.evalExpr(expr.else);
   }
 
