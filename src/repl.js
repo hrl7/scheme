@@ -2,9 +2,12 @@ import Interpreter from "./interpreter";
 import { display } from "./nodes";
 
 class REPL {
-  constructor() {
+  constructor(sources = []) {
     this.interpreter = new Interpreter();
     this.result = null;
+    sources.forEach(src => {
+      this.run(src);
+    });
   }
 
   run(src) {

@@ -60,9 +60,11 @@ class Parser {
   }
 
   parse() {
-    const node = this.makeExpr();
-    debug("finish parsing");
-    this.program.push(node);
+    while (this.currentIndex < this.tokens.length) {
+      const node = this.makeExpr();
+      this.program.push(node);
+      this.currentIndex++;
+    }
   }
 
   assertLPAREN() {
