@@ -6,6 +6,10 @@ export const BASE_PROCEDURES = [
   [["PAIR"], "car", operands => operands[0].car],
   [["PAIR"], "cdr", operands => operands[0].cdr],
   [["*"], "null?", operands => operands[0].type === "NULL" ? TRUE : FALSE],
+  [["*"], "pair?", operands => operands[0].type === "PAIR" ? TRUE : FALSE],
+  [["BOOLEAN","BOOLEAN"], "and", operands => (operands[0].value && operands[1].value) ? TRUE : FALSE],
+  [["BOOLEAN","BOOLEAN"], "or", operands => (operands[0].value || operands[1].value) ? TRUE : FALSE],
+  [["BOOLEAN"], "not", operands => (operands[0].value) ?  FALSE : TRUE],
   [["*", "*"], "eq?", operands => {
     switch(operands[0].type){
       case NODE_TYPES.ATOM:
