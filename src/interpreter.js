@@ -5,14 +5,7 @@ import { NODE_TYPES } from "./constants";
 
 const debug = Debug("eval:run");
 const debugAssert = Debug("eval:assert");
-const {
-  TRUE,
-  FALSE,
-  NULL,
-  buildProc,
-  buildPair,
-  toString,
-} = require("./nodes");
+const { NULL, buildProc, buildPair, toString } = require("./nodes");
 const { BASE_PROCEDURES } = require("./procedures/base");
 const { MATH_PROCEDURES } = require("./procedures/math");
 class Env {
@@ -115,9 +108,10 @@ class Interpreter {
         return ast.name;
       case NODE_TYPES.IDENTIFIER:
         return this.evalIdentifier(ast);
-      case NODE_TYPES.EXPR: {
+      case NODE_TYPES.EXPR:
         return this.evalExpr(ast.expr);
-      }
+      case NODE_TYPES.COND:
+        return this.evalCond(ast);
       case NODE_TYPES.QUOTED_EXPR: {
         return this.evalQuote(ast);
       }
@@ -132,6 +126,7 @@ class Interpreter {
         return this.evalProcCall(expr);
       case NODE_TYPES.IDENTIFIER:
         return this.evalIdentifier(expr);
+      case NODE_TYPES.BOOLEAN:
       case NODE_TYPES.NULL:
       case NODE_TYPES.ATOM:
       case NODE_TYPES.PAIR:
@@ -148,6 +143,19 @@ class Interpreter {
         const msg = "UNRECOGNIZED Expr type: " + expr.type;
         throw new Error(msg);
     }
+  }
+
+  evalCond(expr) {
+    let i = 0;
+    let testExpr = expr.clauses[i].test;
+    do {
+      const result = this.evalExpr(testExpr);
+      if (result.type === NODE_TYPES.BOOLEAN && result.value) {
+        return this.evalExpr(expr.clauses[i].result);
+      }
+      i++;
+    } while (i < expr.clauses.length);
+    return this.evalExpr(expr.else);
   }
 
   evalLambda(expr) {

@@ -151,3 +151,13 @@ test("eval nested list", () => {
     },
   });
 });
+
+test("eval cond", () => {
+  const interpreter = new Interpreter();
+  interpreter.run("(cond ((null? '(a)) #t) (else #f))");
+  expect(interpreter.result).toEqual({
+    type: "BOOLEAN",
+    value: false,
+    symbol: "#f",
+  });
+});

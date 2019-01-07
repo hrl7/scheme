@@ -1,11 +1,13 @@
 import Debug from "debug";
-import { TOKEN_TYPES } from "./constants";
+import { NODE_TYPES, TOKEN_TYPES } from "./constants";
+import { TRUE, FALSE, NULL } from "./nodes";
 
 const debug = Debug("parser");
 const debugQuote = Debug("parser:quote");
 const debugProc = Debug("parser:proc");
 const debugExpr = Debug("parser:expr");
 const debugLambda = Debug("parser:lambda");
+const debugCond = Debug("parser:cond");
 
 const toNode = token => {
   debug("to Node: ", token);
@@ -23,6 +25,21 @@ const toNode = token => {
         name: token.identifier,
         loc: token.loc || null,
       };
+    }
+    case TOKEN_TYPES.NULL:
+      return NULL;
+    case TOKEN_TYPES.BOOLEAN:
+      return token.value ? TRUE : FALSE;
+    case TOKEN_TYPES.KEYWORD:
+      if (token.keyword === "else") {
+        return {
+          type: "ELSE",
+          loc: token.loc || null,
+        };
+      }
+    default: {
+      const msg = `UNRECOGNIZED Token: ${token.type}, ${JSON.stringify(token)}`;
+      throw new Error(msg);
     }
   }
 };
@@ -56,14 +73,20 @@ class Parser {
     }
   }
   assertLambda() {
+    this.assertKeyword("lambda");
+  }
+  assertCond() {
+    this.assertKeyword("cond");
+  }
+  assertKeyword(keyword) {
     const token = this.tokens[this.currentIndex];
     const nextToken = this.tokens[this.currentIndex + 1];
     if (
       token.type !== TOKEN_TYPES.LPAREN ||
       nextToken.type !== TOKEN_TYPES.KEYWORD ||
-      nextToken.keyword !== "lambda"
+      nextToken.keyword !== keyword
     ) {
-      const msg = `failed to parse. expected 'lambda' but found ${
+      const msg = `failed to parse. expected '${keyword}' but found ${
         token.type
       }, ${nextToken.type}`;
       throw new Error(msg);
@@ -236,6 +259,53 @@ class Parser {
     throw new Error("failed to parse lambda expr. expected ')' but not found.");
   }
 
+  makeCondition() {
+    debugCond("start parsing Condition");
+    this.assertCond();
+    this.currentIndex += 2;
+    let token = this.tokens[this.currentIndex];
+    const node = {
+      type: "COND",
+      clauses: [],
+      else: null,
+    };
+    let depth = 1;
+    do {
+      this.debugParsingPosition();
+      debugCond(depth, token.type);
+      switch (token.type) {
+        case TOKEN_TYPES.LPAREN: {
+          debugCond("start parsing clause");
+          depth++;
+          this.currentIndex++;
+          debugCond("start parsing test");
+          this.debugParsingPosition();
+          const test = this.makeExpr();
+          this.currentIndex++;
+          debugCond("start parsing result expr");
+          this.debugParsingPosition();
+          const result = this.makeExpr();
+          if (test.type === "ELSE") {
+            node.else = result;
+          } else {
+            node.clauses.push({
+              test: test,
+              result: result,
+            });
+          }
+          debugCond("finish parsing clause");
+          break;
+        }
+        case TOKEN_TYPES.RPAREN:
+          depth--;
+          break;
+      }
+      this.currentIndex++;
+      token = this.tokens[this.currentIndex];
+    } while (depth !== 0 && this.currentIndex < this.tokens.length);
+    return node;
+  }
+
   makeExpr() {
     const token = this.tokens[this.currentIndex];
     debugExpr("start parsing expr: ", token.type, token);
@@ -249,11 +319,14 @@ class Parser {
         nextToken.type === TOKEN_TYPES.KEYWORD,
         nextToken.keyword === "lambda"
       );
-      if (
-        nextToken.type === TOKEN_TYPES.KEYWORD &&
-        nextToken.keyword === "lambda"
-      ) {
-        return this.makeLambda();
+      if (nextToken.type === TOKEN_TYPES.KEYWORD) {
+        if (nextToken.keyword === "lambda") {
+          return this.makeLambda();
+        }
+
+        if (nextToken.keyword === "cond") {
+          return this.makeCondition();
+        }
       }
 
       return {

@@ -490,3 +490,16 @@ test("makeProcCall", () => {
   expect(parser.tokens[parser.currentIndex].type).toBe("RPAREN");
   expect(parser.currentIndex).toBe(11);
 });
+
+test("parse cond", () => {
+  const src = "(cond ((null? '()) #t) (else #f))";
+  const lexer = new Lexer(src);
+  lexer.tokenize();
+  const parser = new Parser(lexer.tokens, src);
+  parser.parse();
+  console.log(JSON.stringify(parser.program[0], null, 2));
+  expect(parser.program[0].type).toBe("COND");
+  expect(parser.program[0].clauses[0].test.expr.type).toBe("PROC_CALL");
+  expect(parser.program[0].clauses[0].result.type).toBe("BOOLEAN");
+  expect(parser.program[0].else.type).toBe("BOOLEAN");
+});
