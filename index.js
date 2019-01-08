@@ -22,7 +22,7 @@ const args = argv
     },
   ])
   .run();
-const sources = args.options.load.map(path => fs.readFileSync(path, "utf8"));
+const sources = (args.options.load || []).map(path => fs.readFileSync(path, "utf8"));
 const repl = new REPL(sources);
 process.stdin.on("readable", () => {
   const chunk = process.stdin.read();
