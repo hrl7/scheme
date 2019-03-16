@@ -13,7 +13,7 @@ export const BASE_PROCEDURES = [
   [["*", "*"], "eq?", operands => {
     switch(operands[0].type){
       case NODE_TYPES.ATOM:
-        return operands[0].symbol === operands[1].symbol ? TRUE : FALSE;
+        return operands[0].name === operands[1].name ? TRUE : FALSE;
       case NODE_TYPES.NUMBER:
         return operands[0].value === operands[1].value ? TRUE : FALSE;
       default:
