@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "babel-node index.js",
+    "start": "babel-node repl.js",
     "server": "webpack-dev-server",
     "build": "webpack",
     "fix": "prettier --trailing-comma es5 --write \"src/*.js\" \"__tests__/*.js\" index.js"
