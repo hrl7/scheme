@@ -34,7 +34,7 @@
     "regenerator-runtime": "0.13.3",
     "webpack": "4.39.3",
     "webpack-cli": "3.3.9",
-    "webpack-dev-server": "3.8.0"
+    "webpack-dev-server": "3.8.1"
   },
   "dependencies": {
     "argv": "0.0.2",
