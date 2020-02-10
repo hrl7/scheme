@@ -33,7 +33,7 @@
     "prettier": "1.19.1",
     "regenerator-runtime": "0.13.3",
     "webpack": "4.41.5",
-    "webpack-cli": "3.3.9",
+    "webpack-cli": "3.3.10",
     "webpack-dev-server": "3.10.3"
   },
   "dependencies": {
