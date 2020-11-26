@@ -27,7 +27,7 @@
     "@babel/preset-react": "7.12.7",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "25.5.1",
-    "babel-loader": "8.2.1",
+    "babel-loader": "8.2.2",
     "babel-plugin-styled-components": "1.12.0",
     "jest": "25.5.4",
     "prettier": "1.19.1",
