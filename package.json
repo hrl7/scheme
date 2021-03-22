@@ -22,8 +22,8 @@
   "homepage": "https://github.com/hrl7/scheme#readme",
   "devDependencies": {
     "@babel/core": "7.13.10",
-    "@babel/node": "7.13.10",
-    "@babel/preset-env": "7.13.10",
+    "@babel/node": "7.13.12",
+    "@babel/preset-env": "7.13.12",
     "@babel/preset-react": "7.12.13",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "25.5.1",
